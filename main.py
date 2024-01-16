@@ -39,6 +39,8 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
         with open('hello.gif', 'rb') as photo:
             await bot.send_photo(chat_id=chat_id, photo=photo)
         await bot.send_message(chat_id=chat_id, text="Welcome to Cyclic Starter Python Telegram Bot!")
+    elif text == "/hello":
+        await bot.send_message(chat_id=chat_id, text="Selamat Dataaaaaaaang")
     else:
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Yo!")
 
