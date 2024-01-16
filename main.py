@@ -38,7 +38,7 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
     # try:
     chat_id = update.message["chat"]["id"]
     text = update.message["text"]
-    document = update.message["document"]
+    # document = update.message["document"]
 
     # except KeyError:
     #     # Jika bukan pesan teks, coba akses chat_id dari jenis pesan lain
@@ -49,8 +49,8 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
         await bot.send_message(chat_id=chat_id, text="Selamat datang di Pdz Cloud, anda dapat mengupload file apa saja di sini.\n\nJadikan bot ini sebagai media penyimpanan pribadimu.\n\nGunakan bot ini dengan bijak.\n\nJika terjadi kendala selama penggunaan bot, hubungi akun ini @Pdz03\n\nTerimakasih")
     elif text == "/help":
         await bot.send_message(chat_id=chat_id, text="Selamat Dataaaaaaaang")
-    elif document:
-        await bot.send_message(chat_id=chat_id, text="Yeayy, file berhasil terupload")
+    # elif document:
+    #     await bot.send_message(chat_id=chat_id, text="Yeayy, file berhasil terupload")
     else:
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Yo!")
 
