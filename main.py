@@ -35,16 +35,14 @@ def auth_telegram_token(x_telegram_bot_api_secret_token: str = Header(None)) -> 
 
 @app.post("/webhook/")
 async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_telegram_token)):
-    # try:
-    chat_id = update.message["chat"]["id"]
-    text = update.message["text"]
-
     print(update.message)
+    chat_id = update.message["chat"]["id"]
+    try:
+        text = update.message["text"]
     # document = update.message["document"]
-
-    # except KeyError:
-    #     # Jika bukan pesan teks, coba akses chat_id dari jenis pesan lain
-    #     chat_id = update.callback_query.message.chat.id
+    except KeyError:
+        text = ""
+        # Jika bukan pesan teks, coba akses chat_id dari jenis pesan lain
     # print("Received message:", update.message)
 
     if text == "/start":
