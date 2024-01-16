@@ -61,6 +61,8 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
     elif update.message["document"]:
         caption = update.message["caption"] or "No Caption"
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, file berhasil terupload!\n\nTipe = Dokumen\nCaption = {caption}")
+    elif update.message["forward_origin"]:
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Pesan berhasil diteruskan ke sini!")
     else:
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File!")
 
