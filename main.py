@@ -50,7 +50,18 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
     elif text == "/help":
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Selamat datang di Pdz Cloud, anda dapat mengupload file apa saja di sini.\n\nJadikan bot ini sebagai media penyimpanan pribadimu.\n\nGunakan bot ini dengan bijak.\n\nJika terjadi kendala selama penggunaan bot, hubungi akun ini @Pdz03\n\nTerimakasih")
     elif update.message["forward_origin"]:
-        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Pesan berhasil diteruskan ke sini!")
+        sender = update.message["forward_origin"]["sender_user_name"]
+        type = ""
+        caption = update.message["caption"] or "No Caption"
+        if update.message["document"]:
+            type = "Dokumen"
+        elif update.message["photo"]:
+            type = "Gambar"
+        elif update.message["video"]:
+            type = "Video"
+        elif update.message["audio"]:
+            type = "Audio"
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"File berhasil diteruskan ke sini!\n\nFile diteruskan dari {sender}\nTipe = {type}\nCaption = {caption}")
     else:
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File!")
 
