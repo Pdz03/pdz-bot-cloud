@@ -52,7 +52,12 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
     elif "forward_origin" in update.message:
         # sender = update.message["forward_origin"]["sender_user_name"]
         type = ""
-        caption = update.message["caption"] or "No Caption"
+        caption = ""
+        if "caption" in update.message:
+            caption = update.message["caption"]
+        else:
+            caption = "No Caption"
+
         if "document" in update.message:
             type = "Dokumen"
         elif "photo" in update.message:
