@@ -72,7 +72,7 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
         elif update.message["forward_origin"]["type"] == "user":
             id_sender = update.message["forward_origin"]["sender_user"]["username"]
             sender_name = update.message["forward_origin"]["sender_user"]["first_name"]
-            sender = f"{sender_name} ({id_sender})"
+            sender = f"{sender_name} (@{id_sender})"
 
         if "text" in update.message:
             await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File!")
