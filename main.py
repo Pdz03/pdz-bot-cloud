@@ -35,24 +35,26 @@ def auth_telegram_token(x_telegram_bot_api_secret_token: str = Header(None)) -> 
 
 @app.post("/webhook/")
 async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_telegram_token)):
-    try:
-        chat_id = update.message["chat"]["id"]
-        text = update.message["text"]
-    except KeyError:
-        # Jika bukan pesan teks, coba akses chat_id dari jenis pesan lain
-        chat_id = update.callback_query.message.chat.id
+    # try:
+    chat_id = update.message["chat"]["id"]
+    text = update.message["text"]
+    document = update.message["document"]
+
+    # except KeyError:
+    #     # Jika bukan pesan teks, coba akses chat_id dari jenis pesan lain
+    #     chat_id = update.callback_query.message.chat.id
     # print("Received message:", update.message)
 
     if text == "/start":
-        with open('hello.gif', 'rb') as photo:
-            await bot.send_photo(chat_id=chat_id, photo=photo)
-        await bot.send_message(chat_id=chat_id, text="Welcome to Cyclic Starter Python Telegram Bot!")
-    elif text == "/hello":
+        await bot.send_message(chat_id=chat_id, text="Selamat datang di Pdz Cloud, anda dapat mengupload file apa saja di sini.\n\nJadikan bot ini sebagai media penyimpanan pribadimu.\n\nGunakan bot ini dengan bijak.\n\nJika terjadi kendala selama penggunaan bot, hubungi akun ini @Pdz03\n\nTerimakasih")
+    elif text == "/help":
         await bot.send_message(chat_id=chat_id, text="Selamat Dataaaaaaaang")
+    elif document:
+        await bot.send_message(chat_id=chat_id, text="Yeayy, file berhasil terupload")
     else:
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Yo!")
 
-    if update.message.content_type in ['document', 'audio', 'photo', 'video']:
-        await bot.send_message(chat_id=chat_id, text="Yeayy, file berhasil terupload")
+    # if update.message.content_type in ['document', 'audio', 'photo', 'video']:
+    #     await bot.send_message(chat_id=chat_id, text="Yeayy, file berhasil terupload")
 
     return {"ok": True}
