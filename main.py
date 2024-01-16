@@ -41,14 +41,15 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
     # print("Received message:", update.message)
 
     if text == "/start":
-        with open('hello.gif', 'rb') as photo:
-            await bot.send_photo(chat_id=chat_id, photo=photo)
-        await bot.send_message(chat_id=chat_id, text="Welcome to Cyclic Starter Python Telegram Bot!")
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Selamat datang di Pdz Cloud, silakan upload filemu di sini!\n\nTekan /help untuk informasi lebih lanjut")
+    elif text == "/help":
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Selamat datang di Pdz Cloud, anda dapat mengupload file apa saja di sini.\n\nJadikan bot ini sebagai media penyimpanan pribadimu.\n\nGunakan bot ini dengan bijak.\n\nJika terjadi kendala selama penggunaan bot, hubungi akun ini @Pdz03\n\nTerimakasih")
     elif text == "Haloo":
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Haloo juga!")
-    elif bot.message_handler(content_types=['document', 'audio', 'photo', 'video']):
-        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Yeayyy file berhasil terupload!")
     else:
-        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Yo!")
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, bot ini hanya digunakan untuk upload file")
+
+    if update.message.content_type in ['document', 'audio', 'photo', 'video']:
+        await bot.send_message(chat_id=chat_id, text="Yeayy, file berhasil terupload!")
 
     return {"ok": True}
