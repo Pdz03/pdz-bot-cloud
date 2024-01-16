@@ -50,7 +50,7 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
     elif text == "/help":
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Selamat datang di Pdz Cloud, anda dapat mengupload file apa saja di sini.\n\nJadikan bot ini sebagai media penyimpanan pribadimu.\n\nGunakan bot ini dengan bijak.\n\nJika terjadi kendala selama penggunaan bot, hubungi akun ini @Pdz03\n\nTerimakasih")
     elif "forward_origin" in update.message:
-        # sender = update.message["forward_origin"]["sender_user_name"]
+        sender = ""
         type = ""
         caption = ""
         if "caption" in update.message:
@@ -66,24 +66,51 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
             type = "Video"
         elif "audio" in update.message:
             type = "Audio"
-        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"File berhasil diteruskan ke sini!\n\nTipe = {type}\nCaption = {caption}")
+
+        if update.message["forward_origin"]["type"] == "hidden_user":
+            sender = update.message["forward_origin"]["sender_user_name"]
+        elif update.message["forward_origin"]["type"] == "user":
+            id_sender = update.message["forward_origin"]["sender_user"]["username"]
+            sender_name = update.message["forward_origin"]["sender_user"]["first_name"]
+            sender = f"{sender_name} ({id_sender})"
+
+        if "text" in update.message:
+            await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File!")
+        else:
+            await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"File berhasil diteruskan ke sini!\n\nFile diteruskan dari {sender}\nTipe = {type}\nCaption = {caption}")
+    elif "photo" in update.message:
+        type = "Gambar"
+        caption = ""
+        if "caption" in update.message:
+            caption = update.message["caption"]
+        else:
+            caption = "No Caption"
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, file berhasil terupload!\n\nTipe = {type}\nCaption = {caption}")
+    elif "video" in update.message:
+        type = "Video"
+        caption = ""
+        if "caption" in update.message:
+            caption = update.message["caption"]
+        else:
+            caption = "No Caption"
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, file berhasil terupload!\n\nTipe = {type}\nCaption = {caption}")
+    elif "audio" in update.message:
+        type = "Audio"
+        caption = ""
+        if "caption" in update.message:
+            caption = update.message["caption"]
+        else:
+            caption = "No Caption"
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, file berhasil terupload!\n\nTipe = {type}\nCaption = {caption}")
+    elif "document" in update.message:
+        type = "Dokumen"
+        caption = ""
+        if "caption" in update.message:
+            caption = update.message["caption"]
+        else:
+            caption = "No Caption"
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, file berhasil terupload!\n\nTipe = {type}\nCaption = {caption}")
     else:
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File!")
-
-    # if update.message["photo"]:
-    #     caption = update.message["caption"] or "No Caption"
-    #     await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, file berhasil terupload!\n\nTipe = Gambar\nCaption = {caption}")
-    # elif update.message["video"]:
-    #     caption = update.message["caption"] or "No Caption"
-    #     await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, file berhasil terupload!\n\nTipe = Video\nCaption = {caption}")
-    # elif update.message["audio"]:
-    #     caption = update.message["caption"] or "No Caption"
-    #     await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, file berhasil terupload!\n\nTipe = Audio\nCaption = {caption}")
-    # elif update.message["document"]:
-    #     caption = update.message["caption"] or "No Caption"
-    #     await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, file berhasil terupload!\n\nTipe = Dokumen\nCaption = {caption}")
-
-    # if update.message.content_type in ['document', 'audio', 'photo', 'video']:
-    #     await bot.send_message(chat_id=chat_id, text="Yeayy, file berhasil terupload")
 
     return {"ok": True}
