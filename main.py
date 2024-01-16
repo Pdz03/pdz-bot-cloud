@@ -1,12 +1,15 @@
 import os
+
 from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException, Depends
 from telegram import Update, Bot
 from pydantic import BaseModel
 
+
 class TelegramUpdate(BaseModel):
     update_id: int
     message: dict
+
 
 app = FastAPI()
 
@@ -23,11 +26,13 @@ bot = Bot(token=bot_token)
 # webhook_info = bot.get_webhook_info()
 # print(webhook_info)
 
+
 def auth_telegram_token(x_telegram_bot_api_secret_token: str = Header(None)) -> str:
     # return true # uncomment to disable authentication
     if x_telegram_bot_api_secret_token != secret_token:
         raise HTTPException(status_code=403, detail="Not authenticated")
     return x_telegram_bot_api_secret_token
+
 
 @app.post("/webhook/")
 async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_telegram_token)):
@@ -39,8 +44,10 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
         with open('hello.gif', 'rb') as photo:
             await bot.send_photo(chat_id=chat_id, photo=photo)
         await bot.send_message(chat_id=chat_id, text="Welcome to Cyclic Starter Python Telegram Bot!")
-    elif text == "/hello":
-        await bot.send_message(chat_id=chat_id, text="Selamat Dataaaaaaaang")
+    elif text == "Haloo":
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Haloo juga!")
+    elif bot.message_handler(content_types=['document', 'audio', 'photo', 'video']):
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Yeayyy file berhasil terupload!")
     else:
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Yo!")
 
