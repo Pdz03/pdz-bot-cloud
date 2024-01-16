@@ -49,7 +49,7 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
     else:
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, bot ini hanya digunakan untuk upload file")
 
-    if update.message.content_type in ['document', 'audio', 'photo', 'video']:
-        await bot.send_message(chat_id=chat_id, text="Yeayy, file berhasil terupload!")
+    # if update.message.content_type in ['document', 'audio', 'photo', 'video']:
+    #     await bot.send_message(chat_id=chat_id, text="Yeayy, file berhasil terupload!")
 
     return {"ok": True}
