@@ -38,6 +38,8 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
     # try:
     chat_id = update.message["chat"]["id"]
     text = update.message["text"]
+
+    print(update.message)
     # document = update.message["document"]
 
     # except KeyError:
