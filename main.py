@@ -3,7 +3,11 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException, Depends
 from telegram import Update, Bot
 from pydantic import BaseModel
+from pymongo import MongoClient
 
+MONGODB_CONNECTION_STRING = "mongodb+srv://test:sparta@cluster0.9xken9a.mongodb.net/?retryWrites=true&w=majority&appName=AtlasApp"
+client = MongoClient(MONGODB_CONNECTION_STRING)
+db = client.dbpdzcloud
 
 class TelegramUpdate(BaseModel):
     update_id: int
@@ -46,6 +50,13 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
     # print("Received message:", update.message)
 
     if text == "/start":
+        user = {
+            'tele_id': chat_id,
+            'tele_name': update.message["chat"]["first_name"],
+            'username': update.message["chat"]["username"]
+        }
+
+        print(user)
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Selamat datang di Pdz Cloud, silakan upload filemu di sini!\n\nTekan /help untuk informasi lebih lanjut")
     elif text == "/help":
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Selamat datang di Pdz Cloud, anda dapat mengupload file apa saja di sini.\n\nJadikan bot ini sebagai media penyimpanan pribadimu.\n\nGunakan bot ini dengan bijak.\n\nJika terjadi kendala selama penggunaan bot, hubungi akun ini @Pdz03\n\nTerimakasih")
