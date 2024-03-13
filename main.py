@@ -85,6 +85,8 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
             type = "Video"
         elif "audio" in update.message:
             type = "Audio"
+        elif "entities" in update.message:
+            type = update.message["entities"][0]["type"]
 
         if update.message["forward_origin"]["type"] == "hidden_user":
             sender = update.message["forward_origin"]["sender_user_name"]
@@ -94,7 +96,7 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
             sender = f"{sender_name} (@{id_sender})"
 
         if "text" in update.message:
-            await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File!")
+            await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File dan menyimpan tautan URL!")
         else:
             await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"File berhasil diteruskan ke sini!\n\nFile diteruskan dari {sender}\nTipe = {type}\nCaption = {caption}")
     elif "photo" in update.message:
@@ -130,10 +132,9 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
             caption = "No Caption"
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, file berhasil terupload!\n\nTipe = {type}\nCaption = {caption}")
     elif "entities" in update.message:
-        print(update.message["entities"])
-        type = "URL"
+        type = update.message["entities"][0]["type"]
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, tautan berhasil tersimpan!\n\nTipe = {type}")
     else:
-        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File!")
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File dan menyimpan tautan URL!")
 
     return {"ok": True}
