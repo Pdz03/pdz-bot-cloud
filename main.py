@@ -9,6 +9,7 @@ MONGODB_CONNECTION_STRING = "mongodb+srv://test:sparta@cluster0.9xken9a.mongodb.
 client = MongoClient(MONGODB_CONNECTION_STRING)
 db = client.dbpdzcloud
 
+
 class TelegramUpdate(BaseModel):
     update_id: int
     message: dict
@@ -57,11 +58,11 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
         }
 
         print(user)
-        
+
         auth_user = db.users.find_one({'tele_id': user['tele_id']})
         if auth_user:
             print('Akun sudah terdaftar')
-        else:            
+        else:
             db.users.insert_one(user)
 
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Selamat datang di Pdz Cloud, silakan upload filemu di sini!\n\nTekan /help untuk informasi lebih lanjut")
@@ -128,6 +129,9 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
         else:
             caption = "No Caption"
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, file berhasil terupload!\n\nTipe = {type}\nCaption = {caption}")
+    elif "entities" in update.message:
+        type = update.message["entities"]["type"]
+        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"Yeayy, tautan berhasil tersimpan!\n\nTipe = {type}")
     else:
         await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File!")
 
