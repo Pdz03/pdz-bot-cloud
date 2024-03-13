@@ -95,10 +95,10 @@ async def handle_webhook(update: TelegramUpdate, token: str = Depends(auth_teleg
             sender_name = update.message["forward_origin"]["sender_user"]["first_name"]
             sender = f"{sender_name} (@{id_sender})"
 
-        # if "text" in update.message:
-        #     await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File dan menyimpan tautan URL!")
-        # else:
-        await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"File berhasil diteruskan ke sini!\n\nFile diteruskan dari {sender}\nTipe = {type}\nCaption = {caption}")
+        if "text" in update.message and "entities" not in update.message:
+            await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text="Maaf, gunakan bot ini hanya untuk mengupload File dan menyimpan tautan URL!")
+        else:
+            await bot.send_message(chat_id=chat_id, reply_to_message_id=update.message["message_id"], text=f"File berhasil diteruskan ke sini!\n\nFile diteruskan dari {sender}\nTipe = {type}\nCaption = {caption}")
     elif "photo" in update.message:
         type = "Gambar"
         caption = ""
